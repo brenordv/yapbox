@@ -17,7 +17,7 @@ def main():
 
     ai_tasker = AiTasks(
         api_endpoint=os.getenv("OPEN_ROUTER_API_URL"),
-        api_key=os.getenv("OPEN_ROUTER_API_KEY"),
+        api_key= "google/gemma-2-9b-it:free", #os.getenv("OPEN_ROUTER_API_KEY"),
         default_model=os.getenv("MODEL_NAME"),
         response_logger=log_json_to_folder
     )
@@ -37,8 +37,17 @@ def main():
         agent=agent
     )
 
-    print("AI's response:")
-    print(response.response)
+    print(f"Agent: {response.response}")
+
+    while True:
+        user_message = input()
+
+        response = ai_tasker.ask_a_question(
+            question_or_prompt=user_message,
+            context=response.updated_context
+        )
+
+        print(f"Agent: {response.response}")
 
 
 if __name__ == "__main__":
