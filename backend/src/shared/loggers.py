@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Tuple
 from uuid import uuid4
 
-from backend.src.shared.config import LOG_FOLDER
+from src.shared.config import LOG_FOLDER
 
 
 def get_filename_for_new_file(

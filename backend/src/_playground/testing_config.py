@@ -1,4 +1,4 @@
-from backend.src.shared.config import ROOT_FOLDER, SRC_FOLDER
+from src.shared.config import ROOT_FOLDER, SRC_FOLDER
 
 
 def main():

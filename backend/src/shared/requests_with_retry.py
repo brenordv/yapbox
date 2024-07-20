@@ -1,7 +1,7 @@
 import requests
 
-from backend.src.decorators.retry import retry_request
-from backend.src.shared.serializer import serialize_to_dict
+from src.decorators.retry import retry_request
+from src.shared.serializer import serialize_to_dict
 
 GLOBAL_RETRIES = 3
 GLOBAL_DELAY = 1

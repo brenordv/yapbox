@@ -1,8 +1,8 @@
 import os
 
-from backend.src.ai_tasks.ai_tasks import AiTasks
-from backend.src.shared.config import ensure_env_is_loaded
-from backend.src.shared.loggers import log_json_to_folder
+from src.ai_tasks.ai_tasks import AiTasks
+from src.shared.config import ensure_env_is_loaded
+from src.shared.loggers import log_json_to_folder
 
 
 def main():

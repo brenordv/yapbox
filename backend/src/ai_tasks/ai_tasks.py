@@ -1,10 +1,12 @@
 import re
-from typing import List, Callable
+from io import StringIO
+from typing import List, Callable, Union
+import pandas as pd
 
-from backend.src.ai_tasks.types import ChatContextItem, AiResponse, AiRequest, AiGeneratorConfig
-from backend.src.shared.http import get_headers
-import backend.src.shared.requests_with_retry as requests
-from backend.src.shared.serializer import serialize_to_dict
+from src.ai_tasks.types import ChatContextItem, AiResponse, AiRequest, AiGeneratorConfig
+from src.shared.http import get_headers
+import src.shared.requests_with_retry as requests
+from src.shared.serializer import serialize_to_dict
 
 
 class AiTasks:
@@ -185,3 +187,49 @@ class AiTasks:
         self._log_ai_interaction(response, json_response)
 
         return response
+
+    def analyze_data(
+            self,
+            question_or_prompt: str,
+            data: Union[str, List[str], dict, List[dict]],
+            is_csv: bool = False,
+            data_before_prompt: bool = False,
+            agent: str = None,
+            context: List[ChatContextItem] = None
+    ) -> AiResponse:
+        """
+        Analyze data with the AI model.
+
+        :param question_or_prompt: The question to ask the AI model.
+        :param data: The data to analyze with the AI model.
+        :param is_csv: If the data is in CSV format. (Optional. Default: False)
+        :param data_before_prompt: If the data should be sent before the prompt. (Optional. Default: False)
+        :param agent:  A text that will give the AI context while answering the question.
+        (Optional. Default: Nothing. Just let the AI be themselves.)
+        :param context: A list of previous messages that the AI should consider while answering the question.
+        (Optional. Default: Nothing. Will be created automatically when the AI answers the question.)
+        :return: The response from the AI with extra information.
+        """
+        # Convert the data to a json list.
+        if is_csv:
+            if isinstance(data, str):
+                serialized_data = pd.read_csv(StringIO(data)).to_dict(orient="records")
+            elif isinstance(data, list):
+                serialized_data = [pd.DataFrame(StringIO(d)).to_dict(orient="records") for d in data]
+            else:
+                # Probably an invalid data.
+                # Would be better if I throw an exception here, but I'll just return the data as is.
+                serialized_data = data
+        else:
+            serialized_data = data
+
+        if data_before_prompt:
+            prompt = f"Data:\n{serialized_data}\n{question_or_prompt}"
+        else:
+            prompt = f"{question_or_prompt}\nData:\n{serialized_data}"
+
+        return self.ask_a_question(
+            question_or_prompt=prompt,
+            system_context=agent,
+            context=context
+        )

@@ -26,6 +26,11 @@ AI_CUSTOM_PERSONALITIES_FOLDER = AI_PERSONALITIES_BASE_FOLDER.joinpath("custom")
 # backend/.data/ai_system_contexts/rulesets
 AI_RULESETS_FOLDER = AI_SYS_CONTEXTS_FOLDER.joinpath("rulesets")
 
+# backend/.data/ai_system_contexts/agents
+AI_AGENTS_FOLDER = AI_SYS_CONTEXTS_FOLDER.joinpath("agents")
+
+SAMPLE_DATASETS_FOLDER = DATA_FOLDER.joinpath("sample_datasets")
+
 # backend/.logs
 LOG_FOLDER = ROOT_FOLDER.joinpath(".logs")
 
@@ -38,7 +43,8 @@ load_dotenv(ENV_FILE)
 
 # Create the required folders if they don't exist.
 for required_folder in [DATA_FOLDER, LOG_FOLDER, AI_SYS_CONTEXTS_FOLDER, AI_PERSONALITIES_BASE_FOLDER,
-                        AI_VIDEO_GAME_PERSONALITIES_FOLDER, AI_CUSTOM_PERSONALITIES_FOLDER, AI_RULESETS_FOLDER]:
+                        AI_VIDEO_GAME_PERSONALITIES_FOLDER, AI_CUSTOM_PERSONALITIES_FOLDER,
+                        AI_RULESETS_FOLDER, AI_AGENTS_FOLDER]:
     if required_folder.exists():
         continue
 

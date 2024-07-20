@@ -1,4 +1,4 @@
-from backend.src.ai_utils.ai_context_loader import ContextBuilder
+from src.ai_utils.ai_context_loader import ContextBuilder
 
 
 def main():

@@ -2,8 +2,8 @@ import logging
 import random
 import time
 
-from backend.src.decorators.benchmark import benchmark
-from backend.src.decorators.retry import retry
+from src.decorators.benchmark import benchmark
+from src.decorators.retry import retry
 
 logging.basicConfig(level=logging.DEBUG)
 

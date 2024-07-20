@@ -1,9 +1,9 @@
 import json
 from typing import List, Dict, Union
 
-from backend.src.ai_utils.types import CustomPersonality
-from backend.src.shared.config import AI_VIDEO_GAME_PERSONALITIES_FOLDER, AI_CUSTOM_PERSONALITIES_FOLDER, \
-    AI_RULESETS_FOLDER
+from src.ai_utils.types import CustomPersonality
+from src.shared.config import AI_VIDEO_GAME_PERSONALITIES_FOLDER, AI_CUSTOM_PERSONALITIES_FOLDER, \
+    AI_RULESETS_FOLDER, AI_AGENTS_FOLDER
 
 
 class ContextBuilder:
@@ -13,10 +13,12 @@ class ContextBuilder:
         self._available_video_game_personalities: Dict[str, str] = {}
         self._available_custom_personalities: Dict[str, CustomPersonality] = {}
         self._rulesets: Dict[str, str] = {}
+        self._agents: Dict[str, str] = {}
 
         self._load_rulesets()
         self._load_video_game_personalities()
         self._load_custom_personalities()
+        self._load_agents()
 
     def _load_rulesets(self) -> None:
         for ruleset in AI_RULESETS_FOLDER.rglob("*.txt"):
@@ -78,6 +80,16 @@ class ContextBuilder:
                 variants=personality_variants
             )
 
+    def _load_agents(self) -> None:
+        for agent_file in AI_AGENTS_FOLDER.rglob("*.txt"):
+            if not agent_file.is_file():
+                continue
+
+            agent_name = agent_file.stem
+            agent_text = agent_file.read_text()
+
+            self._agents[agent_name.lower()] = agent_text
+
     def _load_video_game_personality(self, character_name: str) -> str:
         return self._available_video_game_personalities.get(character_name.lower())
 
@@ -122,3 +134,6 @@ class ContextBuilder:
             return personality
 
         return f"{personality}\n\n{ruleset}"
+
+    def load_agent(self, agent_name: str) -> str:
+        return self._agents.get(agent_name.lower())
