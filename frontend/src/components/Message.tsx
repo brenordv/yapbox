@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Message as MessageType, User } from '../types/types';
 import { FaRegClipboard, FaCheck } from 'react-icons/fa';
@@ -49,7 +49,7 @@ const MessageText = styled.div`
     border-radius: 8px;
     padding: 10px 15px;
     width: fit-content;
-    max-width: calc(100% - 50px); /* Adjust to leave space for the icon */
+    max-width: calc(100% - 60px); /* Adjust to leave space for the icon */
     position: relative;
     display: flex;
     align-items: center;
@@ -61,35 +61,35 @@ const IconContainer = styled.div`
     display: flex;
     align-items: center;
     position: absolute;
-    right: -30px;
+    right: -8px;
     opacity: 0;
     transition: opacity 0.2s;
-    font-size: 1.4em; /* 40% bigger */
+    font-size: 1.4em;
 `;
 
-const ClipboardIcon = styled(FaRegClipboard)`
-    color: gray;
+const ClipboardIcon = styled(FaRegClipboard)<{ visible: boolean }>`
+    transition: opacity 0.3s ease;
+    opacity: ${(props) => (props.visible ? 1 : 0)};
+    position: absolute;
 `;
 
-const CheckIcon = styled(FaCheck)`
+const CheckIcon = styled(FaCheck)<{ visible: boolean }>`
+    transition: opacity 0.3s ease;
+    opacity: ${(props) => (props.visible ? 1 : 0)};
     color: green;
+    position: absolute;
 `;
 
 interface MessageProps {
     message: MessageType;
     currentUser: User;
     otherUser: User;
+    copiedMessageId: string | null;
+    onCopyClick: (messageId: string) => void;
 }
 
-const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) => {
-    const [copied, setCopied] = useState(false);
+const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser, copiedMessageId, onCopyClick }) => {
     const sender = message.senderId === currentUser.id ? currentUser : otherUser;
-
-    const handleCopyClick = async () => {
-        await navigator.clipboard.writeText(message.text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000); // Reset the icon after 2 seconds
-    };
 
     return (
         <MessageContainer>
@@ -101,8 +101,9 @@ const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) =>
                 </MessageHeader>
                 <MessageText>
                     {message.text}
-                    <IconContainer className="icon-container" onClick={handleCopyClick}>
-                        {copied ? <CheckIcon /> : <ClipboardIcon />}
+                    <IconContainer className="icon-container" onClick={() => onCopyClick(message.id)}>
+                        <ClipboardIcon visible={copiedMessageId !== message.id} />
+                        <CheckIcon visible={copiedMessageId === message.id} />
                     </IconContainer>
                 </MessageText>
             </MessageContentContainer>
