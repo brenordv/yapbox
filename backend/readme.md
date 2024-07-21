@@ -15,6 +15,9 @@ One thing I noticed is that, depending on the LLM model you use, they will behav
 For example: Using `undi95/toppy-m-7b:free` Shadowheart keeping shouting out that she's a Shar's follower, and that 
 she's a cleric of Shar, etc. However, if I use `gpt-3.5-turbo`, she behaves more naturally.
 
+Note: I usually use the username Raccoon and I made all the characters to be friendly to me, so I could test their 
+interactions with unknown vs. known users. 
+
 | Game            | Character                |
 |-----------------|--------------------------|
 | Baldur's Gate 3 | Astarion                 |
