@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Message as MessageType, User } from '../types/types';
 import { FaRegClipboard, FaCheck } from 'react-icons/fa';
@@ -64,6 +64,7 @@ const IconContainer = styled.div`
     right: -30px;
     opacity: 0;
     transition: opacity 0.2s;
+    font-size: 1.4em; /* 40% bigger */
 `;
 
 const ClipboardIcon = styled(FaRegClipboard)`
