@@ -90,10 +90,16 @@ class ContextBuilder:
 
             self._agents[agent_name.lower()] = agent_text
 
-    def _load_video_game_personality(self, character_name: str) -> str:
+    def _load_video_game_personality(self, character_name: str) -> Union[str, None]:
+        if character_name is None:
+            return None
+
         return self._available_video_game_personalities.get(character_name.lower())
 
     def _load_custom_personality(self, character_name: str, variant: str) -> Union[str, None]:
+        if character_name is None:
+            return None
+
         custom_personality = self._available_custom_personalities.get(character_name.lower())
 
         if custom_personality is None:

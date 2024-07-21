@@ -27,14 +27,6 @@ def get_command_line() -> dict:
         help="Name of the character that the user wants to talk to."
     )
 
-    # Add optional arguments with defaults
-    parser.add_argument(
-        "-r", "--ruleset",
-        type=str,
-        default="chat",
-        help="Name of the ruleset that will be used by the AI. (default: chat)"
-    )
-
     parser.add_argument(
         "-v", "--character_variant",
         type=str,
@@ -47,16 +39,16 @@ def get_command_line() -> dict:
     return {
         "user": args.user,
         "character": args.character,
-        "ruleset": args.ruleset,
         "character_variant": args.character_variant
     }
 
 
-def call_ask_question(question_or_prompt, system_context, context):
+def call_ask_question(question_or_prompt, character_name=None, character_variant=None, context=None):
     url = f"{API_BASE_URL}/ask-question"
     payload = {
         "question_or_prompt": question_or_prompt,
-        "system_context": system_context,
+        "character_name": character_name,
+        "character_variant": character_variant,
         "context": context
     }
     response = requests.post(url, json=payload)
@@ -68,7 +60,6 @@ def main():
     command_line_args = get_command_line()
     user = command_line_args["user"]
     character = command_line_args["character"]
-    ruleset = command_line_args["ruleset"]
     character_variant = command_line_args["character_variant"]
 
     print(f"YapBox AI Chat :: {command_line_args['user']} <-> {command_line_args['character']}")
@@ -76,15 +67,12 @@ def main():
 
     ensure_env_is_loaded()
 
-    cb_loader = ContextBuilder()
-    personality = cb_loader.load_personality(character, character_variant, ruleset)
-
     initial_msg = f"$chat$: {character} entered the chat."   # $chat$ comes from the ruleset
 
     response = call_ask_question(
         question_or_prompt=initial_msg,
-        system_context=personality,
-        context=None
+        character_name=character,
+        character_variant=character_variant
     )
 
     print(initial_msg)
@@ -96,8 +84,7 @@ def main():
 
         response = call_ask_question(
             question_or_prompt=f"{user}: {user_message}",
-            context=updated_context,
-            system_context=None
+            context=updated_context
         )
 
         updated_context = response['updated_context']

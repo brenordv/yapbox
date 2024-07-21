@@ -195,7 +195,9 @@ class AiTasks:
             is_csv: bool = False,
             data_before_prompt: bool = False,
             agent: str = None,
-            context: List[ChatContextItem] = None
+            context: List[ChatContextItem] = None,
+            query: str = None,
+            extra_dataset: str = None
     ) -> AiResponse:
         """
         Analyze data with the AI model.
@@ -208,6 +210,8 @@ class AiTasks:
         (Optional. Default: Nothing. Just let the AI be themselves.)
         :param context: A list of previous messages that the AI should consider while answering the question.
         (Optional. Default: Nothing. Will be created automatically when the AI answers the question.)
+        :param query: A query to get data from the Database. (Optional. Default: None)
+        :param extra_dataset: An extra dataset to use with the data. (Optional. Default: None)
         :return: The response from the AI with extra information.
         """
         # Convert the data to a json list.
@@ -222,6 +226,8 @@ class AiTasks:
                 serialized_data = data
         else:
             serialized_data = data
+
+        # TODO: Implement the query parameter
 
         if data_before_prompt:
             prompt = f"Data:\n{serialized_data}\n{question_or_prompt}"

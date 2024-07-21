@@ -92,3 +92,14 @@ python chat_1on1_ai_api.py -u MyName -c Shadowheart
 ```
 
 Note: character variant is optional and applied only to custom personalities, but I'll expand on that later.
+
+## Usage and response quality
+The quality of the responses is extremely dependent on the model you're using. No matter how much instruction you pass
+in the prompt (or even system prompt), if the model is not good for that kind of task, the response will be bad.
+
+From OpenRouter.ai, here's the models I tested:
+- `gryphe/mythomist-7b:free`: Good for role-playing, and following instructions, but bad at acting. Awful at data analysis;
+- `openchat/openchat-7b:free`: Also good for role-playing, better actor than the previous one, but don't follow rules that well. Also bad at data analysis;
+- `qwen/qwen-2-7b-instruct:free`: Good for data analysis, but not so good for role-playing;
+
+If you use a model like `gpt-3.5-turbo`, it will (probably) be good for both, but it's not free.
