@@ -16,8 +16,8 @@ def main():
     agent = cb_loader.load_agent("data-analyst")
 
     ai_tasker = AiTasks(
-        api_endpoint=os.getenv("OPEN_ROUTER_API_URL"),
-        api_key= os.getenv("OPEN_ROUTER_API_KEY"),
+        api_endpoint=os.getenv("AI_API_URL"),
+        api_key= os.getenv("AI_API_KEY"),
         default_model=os.getenv("MODEL_NAME"),
         response_logger=log_json_to_folder
     )

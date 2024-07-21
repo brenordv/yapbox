@@ -67,8 +67,8 @@ def main():
     personality = cb_loader.load_personality(character, character_variant, ruleset)
 
     ai_tasker = AiTasks(
-        api_endpoint=os.getenv("OPEN_ROUTER_API_URL"),
-        api_key=os.getenv("OPEN_ROUTER_API_KEY"),
+        api_endpoint=os.getenv("AI_API_URL"),
+        api_key=os.getenv("AI_API_KEY"),
         default_model=os.getenv("MODEL_NAME"),
         response_logger=log_json_to_folder
     )
