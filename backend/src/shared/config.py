@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 
 from pathlib import Path
 
+API_PORT = 42000
+
 # backend/
 ROOT_FOLDER = Path(__file__).parent.parent.parent
 
