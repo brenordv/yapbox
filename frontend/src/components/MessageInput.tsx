@@ -33,36 +33,36 @@ const FormContainer = styled.div`
 `;
 
 const Input = styled.input`
-  flex: 1;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid ${({ theme }) => theme.borderColor};
-  border-radius: 4px;
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.color};
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid ${({ theme }) => theme.borderColor};
+    border-radius: 4px;
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.color};
 `;
 
 const Button = styled.button`
-  margin-left: 10px;
-  padding: 10px;
-  background-color: #0084ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    margin-left: 10px;
+    padding: 10px;
+    background-color: #0084ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const PaperclipButton = styled(Button)`
-  background-color: #aaa;
-  padding: 10px; /* default size */
+    background-color: #aaa;
+    padding: 10px; /* default size */
 `;
 
 const SendButton = styled(Button)`
-  background-color: #0084ff;
-  width: 80px; /* double width */
+    background-color: #0084ff;
+    width: 80px; /* double width */
 `;
 
 interface MessageInputProps {
@@ -90,10 +90,16 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             const fileType = file.type;
-            if (fileType === 'text/plain' || fileType === 'application/json' || fileType === 'text/csv') {
+            const fileName = file.name;
+
+            if (
+                fileType === 'text/plain' ||
+                fileType === 'application/json' ||
+                fileType === 'text/csv' ||
+                (fileType === 'application/vnd.ms-excel' && fileName.endsWith('.csv'))
+            ) {
                 setSelectedFile(file);
             } else {
-                console.log(fileType);
                 alert('Only .txt, .csv, or .json files are allowed');
             }
         }
