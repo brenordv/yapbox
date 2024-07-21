@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane, FaPaperclip } from 'react-icons/fa';
 
 const InputContainer = styled.div`
     display: flex;
@@ -18,7 +18,7 @@ const Input = styled.input`
     border-radius: 4px;
 `;
 
-const SendButton = styled.button`
+const Button = styled.button`
     margin-left: 10px;
     padding: 10px;
     background-color: #0084ff;
@@ -29,6 +29,16 @@ const SendButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const PaperclipButton = styled(Button)`
+    background-color: #aaa;
+    padding: 10px; /* default size */
+`;
+
+const SendButton = styled(Button)`
+  background-color: #0084ff;
+  width: 80px; /* double width */
 `;
 
 interface MessageInputProps {
@@ -46,6 +56,10 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
         }
     };
 
+    const handlePaperclipClick = () => {
+        // Handler for the paperclip button click
+    };
+
     return (
         <InputContainer as="form" onSubmit={handleSubmit}>
             <Input
@@ -54,6 +68,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type a message..."
             />
+            <PaperclipButton type="button" onClick={handlePaperclipClick}>
+                <FaPaperclip />
+            </PaperclipButton>
             <SendButton type="submit">
                 <FaPaperPlane />
             </SendButton>
