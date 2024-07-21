@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { Message as MessageType, User } from '../types/types';
 
-const MessageContainer = styled.div<{ isCurrentUser: boolean }>`
+const MessageContainer = styled.div`
     display: flex;
-    flex-direction: ${({ isCurrentUser }) => (isCurrentUser ? 'row-reverse' : 'row')};
+    align-items: flex-start;
     margin-bottom: 10px;
 `;
 
@@ -12,22 +12,38 @@ const Avatar = styled.img`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin: 0 10px;
+    margin-right: 10px;
 `;
 
-const MessageContent = styled.div<{ isCurrentUser: boolean }>`
-    background-color: ${({ isCurrentUser }) => (isCurrentUser ? '#0084ff' : '#f0f0f0')};
-    color: ${({ isCurrentUser }) => (isCurrentUser ? 'white' : 'black')};
-    border-radius: 18px;
-    padding: 10px 15px;
-    max-width: 60%;
+const MessageContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+`;
+
+const MessageHeader = styled.div`
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+`;
+
+const SenderName = styled.span`
+    font-weight: bold;
+    margin-right: 10px;
 `;
 
 const Timestamp = styled.span`
     font-size: 0.8em;
     color: #888;
-    margin-top: 5px;
-    display: block;
+`;
+
+const MessageText = styled.div`
+    background-color: #f0f0f0;
+    color: black;
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: fit-content;
+    max-width: 100%;
 `;
 
 interface MessageProps {
@@ -37,16 +53,18 @@ interface MessageProps {
 }
 
 const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) => {
-    const isCurrentUser = message.senderId === currentUser.id;
-    const sender = isCurrentUser ? currentUser : otherUser;
+    const sender = message.senderId === currentUser.id ? currentUser : otherUser;
 
     return (
-        <MessageContainer isCurrentUser={isCurrentUser}>
+        <MessageContainer>
             <Avatar src={sender.avatar} alt={`${sender.name}'s avatar`} />
-            <MessageContent isCurrentUser={isCurrentUser}>
-                {message.text}
-                <Timestamp>{message.timestamp.toLocaleTimeString()}</Timestamp>
-            </MessageContent>
+            <MessageContentContainer>
+                <MessageHeader>
+                    <SenderName>{sender.name}</SenderName>
+                    <Timestamp>{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Timestamp>
+                </MessageHeader>
+                <MessageText>{message.text}</MessageText>
+            </MessageContentContainer>
         </MessageContainer>
     );
 };

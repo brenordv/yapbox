@@ -5,7 +5,6 @@ import { User } from '../types/types';
 const HeaderContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 10px;
     background-color: #f8f8f8;
     border-bottom: 1px solid #e0e0e0;
@@ -24,24 +23,21 @@ const Avatar = styled.img`
 `;
 
 const Name = styled.h2`
-  margin: 0;
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
 `;
 
 interface HeaderProps {
-    userA: User;
-    userB: User;
+    otherUser: User;
 }
 
-const Header: React.FC<HeaderProps> = ({ userA, userB }) => {
+const Header: React.FC<HeaderProps> = ({ otherUser }) => {
     return (
         <HeaderContainer>
             <UserContainer>
-                <Avatar src={userA.avatar} alt={`${userA.name}'s avatar`} />
-                <Name>{userA.name}</Name>
-            </UserContainer>
-            <UserContainer>
-                <Avatar src={userB.avatar} alt={`${userB.name}'s avatar`} />
-                <Name>{userB.name}</Name>
+                <Avatar src={otherUser.avatar} alt={`${otherUser.name}'s avatar`} />
+                <Name>{otherUser.name}</Name>
             </UserContainer>
         </HeaderContainer>
     );

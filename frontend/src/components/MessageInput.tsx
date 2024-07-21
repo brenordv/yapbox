@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { FaPaperPlane } from 'react-icons/fa';
 
 const InputContainer = styled.div`
     display: flex;
+    align-items: center;
     padding: 10px;
     background-color: #f8f8f8;
     border-top: 1px solid #e0e0e0;
@@ -18,12 +20,15 @@ const Input = styled.input`
 
 const SendButton = styled.button`
     margin-left: 10px;
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #0084ff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 interface MessageInputProps {
@@ -49,7 +54,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type a message..."
             />
-            <SendButton type="submit">Send</SendButton>
+            <SendButton type="submit">
+                <FaPaperPlane />
+            </SendButton>
         </InputContainer>
     );
 };

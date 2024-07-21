@@ -9,20 +9,20 @@ const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    max-width: 800px;
+    width: 70%;
     margin: 0 auto;
     border: 1px solid #e0e0e0;
 `;
 
 const userA: User = {
     id: '1',
-    name: 'User A',
+    name: 'Lisa Zhang',
     avatar: 'https://via.placeholder.com/40',
 };
 
 const userB: User = {
     id: '2',
-    name: 'User B',
+    name: 'Laura Parras',
     avatar: 'https://via.placeholder.com/40',
 };
 
@@ -62,7 +62,7 @@ const App: React.FC = () => {
 
     return (
         <AppContainer>
-            <Header userA={userA} userB={userB} />
+            <Header otherUser={userB} />
             <MessageList messages={messages} currentUser={userA} otherUser={userB} />
             <MessageInput onSendMessage={handleSendMessage} />
         </AppContainer>
