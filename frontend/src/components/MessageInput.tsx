@@ -6,16 +6,18 @@ const InputContainer = styled.div`
     display: flex;
     align-items: center;
     padding: 10px;
-    background-color: #f8f8f8;
-    border-top: 1px solid #e0e0e0;
+    background-color: ${({ theme }) => theme.headerBackground};
+    border-top: 1px solid ${({ theme }) => theme.borderColor};
 `;
 
 const Input = styled.input`
     flex: 1;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid ${({ theme }) => theme.borderColor};
     border-radius: 4px;
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.color};
 `;
 
 const Button = styled.button`
@@ -37,8 +39,8 @@ const PaperclipButton = styled(Button)`
 `;
 
 const SendButton = styled(Button)`
-  background-color: #0084ff;
-  width: 80px; /* double width */
+    background-color: #0084ff;
+    width: 80px; /* double width */
 `;
 
 interface MessageInputProps {

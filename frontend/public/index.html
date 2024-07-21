@@ -10,10 +10,15 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   <title>Slack DM Simulator</title>
   <style>
-    /* Ensure the root div takes full height for flexbox centering */
     html, body, #root {
       height: 100%;
       margin: 0;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--color);
+      transition: background-color 0.3s, color 0.3s;
     }
   </style>
 </head>

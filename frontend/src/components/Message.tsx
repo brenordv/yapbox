@@ -31,6 +31,7 @@ const MessageHeader = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    color: ${({ theme }) => theme.color};
 `;
 
 const SenderName = styled.span`
@@ -40,12 +41,12 @@ const SenderName = styled.span`
 
 const Timestamp = styled.span`
     font-size: 0.8em;
-    color: #888;
+    color: ${({ theme }) => theme.color};
 `;
 
 const MessageText = styled.div`
-    background-color: #f0f0f0;
-    color: black;
+    background-color: ${({ theme }) => theme.messageBackground};
+    color: ${({ theme }) => theme.messageColor};
     border-radius: 8px;
     padding: 10px 15px;
     width: fit-content;
