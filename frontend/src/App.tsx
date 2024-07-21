@@ -3,15 +3,16 @@ import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import Header from './components/Header';
 import MessageList from './components/MessageList';
 import MessageInput from './components/MessageInput';
+import LoadingSkeleton from './components/LoadingSkeleton';
 import { User, Message } from './types/types';
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    --background-color: ${({ theme }) => theme.background};
-    --color: ${({ theme }) => theme.color};
-    background-color: var(--background-color);
-    color: var(--color);
-  }
+    body {
+        --background-color: ${({ theme }) => theme.background};
+        --color: ${({ theme }) => theme.color};
+        background-color: var(--background-color);
+        color: var(--color);
+    }
 `;
 
 const lightTheme = {
@@ -35,12 +36,12 @@ const darkTheme = {
 };
 
 const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 70%;
-  margin: 0 auto;
-  border: 1px solid ${({ theme }) => theme.borderColor};
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 70%;
+    margin: 0 auto;
+    border: 1px solid ${({ theme }) => theme.borderColor};
 `;
 
 const userA: User = {
@@ -82,6 +83,7 @@ const App: React.FC = () => {
         const userPreference = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         return userPreference ? 'dark' : 'light';
     });
+    const [loading, setLoading] = useState(true);
 
     const toggleTheme = () => {
         setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
@@ -97,6 +99,25 @@ const App: React.FC = () => {
         setMessages([...messages, newMessage]);
     };
 
+    const checkAgentType = () => {
+        const agentType = process.env.REACT_APP_AGENT_TYPE;
+
+        switch (agentType) {
+            case 'data-analyst':
+                // Any specific initialization for data-analyst can be added here
+                break;
+            // Add more cases for different agentTypes in the future
+            default:
+                break;
+        }
+    };
+
+    useEffect(() => {
+        checkAgentType();
+        const timer = setTimeout(() => setLoading(false), 5000); // Simulate 5-second loading
+        return () => clearTimeout(timer);
+    }, []);
+
     useEffect(() => {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         const handleChange = (e: MediaQueryListEvent) => {
@@ -110,11 +131,15 @@ const App: React.FC = () => {
     return (
         <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
             <GlobalStyle />
-            <AppContainer>
-                <Header otherUser={userB} themeMode={themeMode} toggleTheme={toggleTheme} />
-                <MessageList messages={messages} currentUser={userA} otherUser={userB} />
-                <MessageInput onSendMessage={handleSendMessage} />
-            </AppContainer>
+            {loading ? (
+                <LoadingSkeleton />
+            ) : (
+                <AppContainer>
+                    <Header otherUser={userB} themeMode={themeMode} toggleTheme={toggleTheme} />
+                    <MessageList messages={messages} currentUser={userA} otherUser={userB} />
+                    <MessageInput onSendMessage={handleSendMessage} />
+                </AppContainer>
+            )}
         </ThemeProvider>
     );
 };
