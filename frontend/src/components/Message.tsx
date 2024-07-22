@@ -14,11 +14,21 @@ const MessageContainer = styled.div`
     }
 `;
 
-const Avatar = styled.img`
+const AvatarContainer = styled.div<{ isUserA: boolean }>`
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    background-color: ${({ isUserA }) => (isUserA ? '#00B4D8' : '#FFD700')};
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 10px;
+`;
+
+const Avatar = styled.img`
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
 `;
 
 const MessageContentContainer = styled.div`
@@ -68,17 +78,17 @@ const IconContainer = styled.div`
     font-size: 1.4em;
 `;
 
-const ClipboardIcon = styled(FaRegClipboard)<{ visible: boolean }>`
+const ClipboardIcon = styled(FaRegClipboard)<{ isVisible: boolean }>`
     transition: opacity 0.3s ease;
-    opacity: ${(props) => (props.visible ? 1 : 0)};
+    opacity: ${(props) => (props.isVisible ? 1 : 0)};
     position: absolute;
 `;
 
-const CheckIcon = styled(FaCheck)<{ visible: boolean }>`
-    transition: opacity 0.3s ease;
-    opacity: ${(props) => (props.visible ? 1 : 0)};
-    color: green;
-    position: absolute;
+const CheckIcon = styled(FaCheck)<{ isVisible: boolean }>`
+  transition: opacity 0.3s ease;
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  color: green;
+  position: absolute;
 `;
 
 interface MessageProps {
@@ -90,6 +100,7 @@ interface MessageProps {
 const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) => {
     const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
     const sender = message.senderId === currentUser.id ? currentUser : otherUser;
+    const isUserA = message.senderId === currentUser.id;
 
     const handleCopyClick = async (messageId: string) => {
         await navigator.clipboard.writeText(message.text);
@@ -98,7 +109,9 @@ const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) =>
 
     return (
         <MessageContainer>
-            <Avatar src={sender.avatar} alt={`${sender.name}'s avatar`} />
+            <AvatarContainer isUserA={isUserA}>
+                <Avatar src={sender.avatar} alt={`${sender.name}'s avatar`} />
+            </AvatarContainer>
             <MessageContentContainer>
                 <MessageHeader>
                     <SenderName>{sender.name}</SenderName>
@@ -107,8 +120,8 @@ const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) =>
                 <MessageText>
                     {message.text}
                     <IconContainer className="icon-container" onClick={() => handleCopyClick(message.id)}>
-                        <ClipboardIcon visible={copiedMessageId !== message.id} />
-                        <CheckIcon visible={copiedMessageId === message.id} />
+                        <ClipboardIcon isVisible={copiedMessageId !== message.id} />
+                        <CheckIcon isVisible={copiedMessageId === message.id} />
                     </IconContainer>
                 </MessageText>
             </MessageContentContainer>

@@ -5,6 +5,7 @@ import MessageList from './components/MessageList';
 import MessageInput from './components/MessageInput';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import { User, Message } from './types/types';
+import {currentAgentTypeToAvatar, currentAgentTypeToName} from "./utils/converters";
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -46,14 +47,14 @@ const AppContainer = styled.div`
 
 const userA: User = {
     id: '1',
-    name: 'Lisa Zhang',
-    avatar: 'https://via.placeholder.com/40',
+    name: 'User',
+    avatar: currentAgentTypeToAvatar(true),
 };
 
 const userB: User = {
     id: '2',
-    name: 'Laura Parras',
-    avatar: 'https://via.placeholder.com/40',
+    name: currentAgentTypeToName(),
+    avatar: currentAgentTypeToAvatar(false),
 };
 
 const initialMessages: Message[] = [

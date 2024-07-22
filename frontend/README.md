@@ -43,3 +43,6 @@ npm run start:paladin-danse
 npm run start:preston-garvey
 npm run start:serana
 ``` 
+
+# Attributions
+For the frontend, I'm using DiceBear to generate the avatars. You can find more information about it [here](https://avatars.dicebear.com/).
