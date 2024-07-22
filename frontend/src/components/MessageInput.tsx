@@ -39,9 +39,9 @@ const TextArea = styled.textarea`
     font-size: 16px;
     border: 1px solid ${({ theme }) => theme.borderColor};
     border-radius: 4px;
-    background-color: ${({theme}) => theme.background};
-    color: ${({theme}) => theme.color};
-    resize: vertical; /* Non-resizable */
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.color};
+    resize: vertical; /* Allow vertical resizing */
     margin-bottom: 10px;
 `;
 
