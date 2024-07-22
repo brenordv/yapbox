@@ -108,8 +108,6 @@ const App: React.FC = () => {
     const checkAgentType = () => {
         const agentType = process.env.REACT_APP_AGENT_TYPE;
 
-        console.log("Checking agent type:", agentType, {env: process.env});
-
         switch (agentType) {
             case 'data-analyst':
                 // Any specific initialization for data-analyst can be added here
