@@ -7,9 +7,8 @@ const InputContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     padding: 10px;
-    background-color: ${({theme}) => theme.headerBackground};
-    border-top: 1px solid ${({theme}) => theme.borderColor};
-
+    background-color: ${({ theme }) => theme.headerBackground};
+    border-top: 1px solid ${({ theme }) => theme.borderColor};
 `;
 
 const FileInfoContainer = styled.div`
@@ -59,7 +58,7 @@ const Button = styled.button`
     border-radius: 4px;
     cursor: pointer;
     align-items: center;
-    justify-content: center;    
+    justify-content: center;
 `;
 
 const PaperclipButton = styled(Button)`
@@ -188,3 +187,4 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
 };
 
 export default MessageInput;
+
