@@ -9,7 +9,7 @@ const InputContainer = styled.div`
     padding: 10px;
     background-color: ${({theme}) => theme.headerBackground};
     border-top: 1px solid ${({theme}) => theme.borderColor};
-    width: 97.705%;
+
 `;
 
 const FileInfoContainer = styled.div`
@@ -34,7 +34,6 @@ const FormContainer = styled.div`
 `;
 
 const TextArea = styled.textarea`
-    width: 97.3%;
     padding: 10px;
     font-size: 16px;
     border: 1px solid ${({ theme }) => theme.borderColor};
@@ -59,9 +58,8 @@ const Button = styled.button`
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center;    
 `;
 
 const PaperclipButton = styled(Button)`
