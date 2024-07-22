@@ -1,12 +1,10 @@
 import re
-from io import StringIO
 from typing import List, Callable, Union
-import pandas as pd
 
 from src.ai_tasks.types import ChatContextItem, AiResponse, AiRequest, AiGeneratorConfig
 from src.shared.http import get_headers
 import src.shared.requests_with_retry as requests
-from src.shared.serializer import serialize_to_dict
+from src.shared.serializer import serialize_to_dict, csv_string_to_dict_list, dataset_to_prompt_text
 
 
 class AiTasks:
@@ -122,7 +120,7 @@ class AiTasks:
             # Normalize string.
             # Remove newlines and extra spaces. For some reason some models tend to add those in their responses for no
             # apparent reason.
-            concatenated_message = re.sub(r"\s+", " ", concatenated_message).strip()
+            concatenated_message = re.sub(r"^\s+|\s+$", " ", concatenated_message).strip()
 
             return ChatContextItem(role="assistant", content=concatenated_message)
         except (IndexError, KeyError) as e:
@@ -141,6 +139,37 @@ class AiTasks:
             "parsed_response": response,
             "api_response": api_response,
         }))
+
+    def _fetch_data_from_query(self, query: str) -> Union[str, List[str], None]:
+        """
+        Fetch data from the Database using a query.
+        :param query: The query to fetch the data.
+        :return: The data fetched from the Database.
+        """
+        # TODO: Implement this... maybe.
+        return None
+
+    def _prepare_datasets(
+            self,
+            is_csv: bool,
+            data: Union[str, List[str], dict, List[dict]],
+            dataset_from_file: str,
+            query: str) -> str:
+        prepared = [
+            "Main dataset:",
+            dataset_to_prompt_text(csv_string_to_dict_list(data)) if is_csv else data,
+        ]
+
+        if dataset_from_file is not None:
+            prepared.append("\nDataset from file:")
+            prepared.append(dataset_to_prompt_text(csv_string_to_dict_list(dataset_from_file)))
+
+        if query is not None:
+            query_data = self._fetch_data_from_query(query)
+            prepared.append("Dataset from query:")
+            prepared.append(dataset_to_prompt_text(query_data) if query_data is not None else "Query yielded no results.")
+
+        return "\n".join(prepared)
 
     def ask_a_question(
             self,
@@ -197,7 +226,7 @@ class AiTasks:
             agent: str = None,
             context: List[ChatContextItem] = None,
             query: str = None,
-            extra_dataset: str = None
+            data_from_file: str = None
     ) -> AiResponse:
         """
         Analyze data with the AI model.
@@ -211,31 +240,15 @@ class AiTasks:
         :param context: A list of previous messages that the AI should consider while answering the question.
         (Optional. Default: Nothing. Will be created automatically when the AI answers the question.)
         :param query: A query to get data from the Database. (Optional. Default: None)
-        :param extra_dataset: An extra dataset to use with the data. (Optional. Default: None)
+        :param data_from_file: Extra data to use in the prompt. (Optional. Default: None)
         :return: The response from the AI with extra information.
         """
-        # Convert the data to a json list.
-        if is_csv:
-            if data is None and extra_dataset is not None:
-                data = extra_dataset
-
-            if isinstance(data, str):
-                serialized_data = pd.read_csv(StringIO(data)).to_dict(orient="records")
-            elif isinstance(data, list):
-                serialized_data = [pd.DataFrame(StringIO(d)).to_dict(orient="records") for d in data]
-            else:
-                # Probably an invalid data.
-                # Would be better if I throw an exception here, but I'll just return the data as is.
-                serialized_data = data
-        else:
-            serialized_data = data
-
-        # TODO: Implement the query parameter
+        serialized_data = self._prepare_datasets(is_csv, data, data_from_file, query)
 
         if data_before_prompt:
-            prompt = f"Data:\n{serialized_data}\n{question_or_prompt}"
+            prompt = f"{serialized_data}\n\n{question_or_prompt}"
         else:
-            prompt = f"{question_or_prompt}\nData:\n{serialized_data}"
+            prompt = f"{question_or_prompt}\n\n{serialized_data}"
 
         return self.ask_a_question(
             question_or_prompt=prompt,

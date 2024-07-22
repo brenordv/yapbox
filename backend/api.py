@@ -1,6 +1,5 @@
 import os
 from uuid import uuid4
-
 from pydantic import BaseModel
 from typing import List, Optional, Union, Dict
 
@@ -123,7 +122,7 @@ async def analyze_data(request: AnalyzeDataRequest):
             agent=agent,
             context=request.context,
             query=request.query,
-            extra_dataset=file_content
+            data_from_file=file_content
         )
         return response
     except Exception as e:
