@@ -65,12 +65,12 @@ const Button = styled.button`
 `;
 
 const PaperclipButton = styled(Button)`
-    background-color: #aaa;
+    background-color: #7938C7;
     padding: 10px; /* default size */
 `;
 
 const SendButton = styled(Button)`
-    background-color: #0084ff;
+    background-color: #271DA2;
     width: 80px; /* double width */
     margin-top: -10px;
 `;
@@ -103,7 +103,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
             onSendMessage(message, isDataAnalyst && isQueryEnabled ? query : undefined);
             setMessage('');
             setSelectedFile(null); // Clear the file after sending the message
-            setQuery(''); // Clear the query after sending the message
+            if (process.env.REACT_APP_DA_CLEAR_QUERY_AFTER_SEND === 'true') {
+                setQuery(''); // Clear the query after sending the message
+            }
             inputRef.current?.focus(); // Return focus to the message input field
         }
     };
@@ -155,7 +157,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
                         rows={1}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Query"
+                        placeholder="Query (not doing anything right now, but the backend is aware of it)"
                     />
                 )}
                 <TextArea
