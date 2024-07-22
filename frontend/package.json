@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:da": "cross-env agentType=data-analyst react-scripts start",
+    "start:da": "cross-env REACT_APP_AGENT_TYPE=data-analyst react-scripts start",
+    "start:shadowheart": "cross-env REACT_APP_AGENT_TYPE=shadowheart react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

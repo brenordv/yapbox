@@ -42,6 +42,19 @@ const Input = styled.input`
     color: ${({ theme }) => theme.color};
 `;
 
+const TextArea = styled.textarea`
+    width: 96.6%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid ${({ theme }) => theme.borderColor};
+    border-radius: 4px;
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.color};
+    resize: vertical; /* Allow only vertical resizing */
+    margin-bottom: 10px;
+    display: flex;
+`;
+
 const Button = styled.button`
     margin-left: 10px;
     padding: 10px;
@@ -66,19 +79,24 @@ const SendButton = styled(Button)`
 `;
 
 interface MessageInputProps {
-    onSendMessage: (text: string) => void;
+    onSendMessage: (text: string, query?: string) => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     const [message, setMessage] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [query, setQuery] = useState('');
+
+    const isDataAnalyst = process.env.REACT_APP_AGENT_TYPE === 'data-analyst';
+    const isQueryEnabled = process.env.REACT_APP_DA_QUERY_ENABLED === 'true';
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (message.trim()) {
-            onSendMessage(message);
+            onSendMessage(message, isDataAnalyst && isQueryEnabled ? query : undefined);
             setMessage('');
             setSelectedFile(null); // Clear the file after sending the message
+            setQuery(''); // Clear the query after sending the message
         }
     };
 
@@ -116,6 +134,14 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
                     <FileName>{selectedFile.name}</FileName>
                     <RemoveFileButton onClick={handleRemoveFile} />
                 </FileInfoContainer>
+            )}
+            {isDataAnalyst && isQueryEnabled && (
+                <TextArea
+                    rows={2}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Query"
+                />
             )}
             <FormContainer as="form" onSubmit={handleSubmit}>
                 <Input

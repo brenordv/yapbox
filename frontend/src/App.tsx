@@ -39,7 +39,7 @@ const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
     border: 1px solid ${({ theme }) => theme.borderColor};
 `;
@@ -89,7 +89,7 @@ const App: React.FC = () => {
         setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
     };
 
-    const handleSendMessage = (text: string) => {
+    const handleSendMessage = (text: string, query?: string) => {
         const newMessage: Message = {
             id: String(messages.length + 1),
             senderId: userA.id,
@@ -97,10 +97,18 @@ const App: React.FC = () => {
             timestamp: new Date(),
         };
         setMessages([...messages, newMessage]);
+
+        if (query) {
+            // Send query to backend
+            console.log('Sending query to backend:', query);
+            // Implement the actual API call here
+        }
     };
 
     const checkAgentType = () => {
         const agentType = process.env.REACT_APP_AGENT_TYPE;
+
+        console.log("Checking agent type:", agentType, {env: process.env});
 
         switch (agentType) {
             case 'data-analyst':
