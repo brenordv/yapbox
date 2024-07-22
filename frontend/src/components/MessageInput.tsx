@@ -79,7 +79,7 @@ const Hint = styled.span`
     font-size: 12px;
     color: ${({ theme }) => theme.color};
     margin-top: -7px;
-    margin-left: 3px;
+    margin-left: 5px;
     align-self: flex-start;
 `;
 
