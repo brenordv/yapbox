@@ -216,6 +216,9 @@ class AiTasks:
         """
         # Convert the data to a json list.
         if is_csv:
+            if data is None and extra_dataset is not None:
+                data = extra_dataset
+
             if isinstance(data, str):
                 serialized_data = pd.read_csv(StringIO(data)).to_dict(orient="records")
             elif isinstance(data, list):

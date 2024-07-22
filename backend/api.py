@@ -6,6 +6,7 @@ from typing import List, Optional, Union, Dict
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.ai_tasks.ai_tasks import AiTasks
 from src.ai_tasks.types import ChatContextItem, AiResponse
@@ -29,6 +30,16 @@ files: Dict[str, str] = {}
 
 app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class AiRequest(BaseModel):
     messages: List[ChatContextItem]
@@ -45,7 +56,7 @@ class AskQuestionRequest(BaseModel):
 
 class AnalyzeDataRequest(BaseModel):
     question_or_prompt: str
-    data: Union[str, List[str], dict, List[dict]]
+    data: Optional[Union[str, List[str], dict, List[dict]]] = None
     is_csv: Optional[bool] = False
     data_before_prompt: Optional[bool] = False
     query: Optional[str] = None
