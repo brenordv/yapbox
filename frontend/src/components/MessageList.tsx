@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Message as MessageType, User } from '../types/types';
 import Message from './Message';
@@ -16,24 +16,20 @@ interface MessageListProps {
 }
 
 const MessageList: React.FC<MessageListProps> = ({ messages, currentUser, otherUser }) => {
-    const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const handleCopyClick = (messageId: string) => {
-        setCopiedMessageId(messageId);
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    useEffect(scrollToBottom, [messages]);
 
     return (
         <MessageListContainer>
             {messages.map((message) => (
-                <Message
-                    key={message.id}
-                    message={message}
-                    currentUser={currentUser}
-                    otherUser={otherUser}
-                    copiedMessageId={copiedMessageId}
-                    onCopyClick={handleCopyClick}
-                />
+                <Message key={message.id} message={message} currentUser={currentUser} otherUser={otherUser} />
             ))}
+            <div ref={messagesEndRef} />
         </MessageListContainer>
     );
 };

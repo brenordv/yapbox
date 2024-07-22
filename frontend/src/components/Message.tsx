@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Message as MessageType, User } from '../types/types';
 import { FaRegClipboard, FaCheck } from 'react-icons/fa';
@@ -31,7 +31,6 @@ const MessageHeader = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 5px;
-    color: ${({ theme }) => theme.color};
 `;
 
 const SenderName = styled.span`
@@ -41,12 +40,12 @@ const SenderName = styled.span`
 
 const Timestamp = styled.span`
     font-size: 0.8em;
-    color: ${({ theme }) => theme.color};
+    color: #888;
 `;
 
 const MessageText = styled.div`
-    background-color: ${({ theme }) => theme.messageBackground};
-    color: ${({ theme }) => theme.messageColor};
+    background-color: #f0f0f0;
+    color: black;
     border-radius: 8px;
     padding: 10px 15px;
     width: fit-content;
@@ -54,6 +53,7 @@ const MessageText = styled.div`
     position: relative;
     display: flex;
     align-items: center;
+    white-space: pre-wrap; /* Preserve line breaks */
 `;
 
 const IconContainer = styled.div`
@@ -85,12 +85,16 @@ interface MessageProps {
     message: MessageType;
     currentUser: User;
     otherUser: User;
-    copiedMessageId: string | null;
-    onCopyClick: (messageId: string) => void;
 }
 
-const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser, copiedMessageId, onCopyClick }) => {
+const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) => {
+    const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
     const sender = message.senderId === currentUser.id ? currentUser : otherUser;
+
+    const handleCopyClick = async (messageId: string) => {
+        await navigator.clipboard.writeText(message.text);
+        setCopiedMessageId(messageId);
+    };
 
     return (
         <MessageContainer>
@@ -102,7 +106,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser, copi
                 </MessageHeader>
                 <MessageText>
                     {message.text}
-                    <IconContainer className="icon-container" onClick={() => onCopyClick(message.id)}>
+                    <IconContainer className="icon-container" onClick={() => handleCopyClick(message.id)}>
                         <ClipboardIcon visible={copiedMessageId !== message.id} />
                         <CheckIcon visible={copiedMessageId === message.id} />
                     </IconContainer>
