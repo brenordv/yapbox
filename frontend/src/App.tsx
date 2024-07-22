@@ -58,24 +58,6 @@ const userB: User = {
 };
 
 const initialMessages: Message[] = [
-    {
-        id: '1',
-        senderId: userA.id,
-        text: 'Hey, how are you?',
-        timestamp: new Date('2023-04-23T10:00:00'),
-    },
-    {
-        id: '2',
-        senderId: userB.id,
-        text: 'I\'m doing great! How about you?',
-        timestamp: new Date('2023-04-23T10:02:00'),
-    },
-    {
-        id: '3',
-        senderId: userA.id,
-        text: 'I\'m good too. Just working on a project.',
-        timestamp: new Date('2023-04-23T10:05:00'),
-    },
 ];
 
 const App: React.FC = () => {
@@ -90,20 +72,9 @@ const App: React.FC = () => {
         setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
     };
 
-    const handleSendMessage = (text: string, query?: string) => {
-        const newMessage: Message = {
-            id: String(messages.length + 1),
-            senderId: userA.id,
-            text,
-            timestamp: new Date(),
-        };
-        setMessages([...messages, newMessage]);
-
-        if (query) {
-            // Send query to backend
-            console.log('Sending query to backend:', query);
-            // Implement the actual API call here
-        }
+    const handleSendMessage = (newMessage: Message) => {
+        console.log("newMessage", newMessage);
+        setMessages(prevState => [...prevState, newMessage]);
     };
 
     const checkAgentType = () => {
@@ -144,7 +115,7 @@ const App: React.FC = () => {
                 <AppContainer>
                     <Header otherUser={userB} themeMode={themeMode} toggleTheme={toggleTheme} />
                     <MessageList messages={messages} currentUser={userA} otherUser={userB} />
-                    <MessageInput onSendMessage={handleSendMessage} />
+                    <MessageInput onSendMessage={handleSendMessage} currentUser={userA} />
                 </AppContainer>
             )}
         </ThemeProvider>
