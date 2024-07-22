@@ -1,6 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import {FaPaperclip, FaPaperPlane, FaTimes} from 'react-icons/fa';
+import { FaPaperclip, FaPaperPlane, FaTimes } from 'react-icons/fa';
 
 const InputContainer = styled.div`
     display: flex;
@@ -37,7 +37,7 @@ const TextArea = styled.textarea`
     width: 97.3%;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid ${({theme}) => theme.borderColor};
+    border: 1px solid ${({ theme }) => theme.borderColor};
     border-radius: 4px;
     background-color: ${({theme}) => theme.background};
     color: ${({theme}) => theme.color};
@@ -77,7 +77,7 @@ const SendButton = styled(Button)`
 
 const Hint = styled.span`
     font-size: 12px;
-    color: ${({theme}) => theme.color};
+    color: ${({ theme }) => theme.color};
     margin-top: -7px;
     margin-left: 3px;
     align-self: flex-start;
@@ -87,11 +87,12 @@ interface MessageInputProps {
     onSendMessage: (text: string, query?: string) => void;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({onSendMessage}) => {
+const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     const [message, setMessage] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [query, setQuery] = useState('');
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const isDataAnalyst = process.env.REACT_APP_AGENT_TYPE === 'data-analyst';
     const isQueryEnabled = process.env.REACT_APP_DA_QUERY_ENABLED === 'true';
@@ -108,8 +109,7 @@ const MessageInput: React.FC<MessageInputProps> = ({onSendMessage}) => {
     };
 
     const handlePaperclipClick = () => {
-        console.log("Paperclip clicked");
-        document.getElementById('fileInput')?.click();
+        fileInputRef.current?.click();
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,21 +146,20 @@ const MessageInput: React.FC<MessageInputProps> = ({onSendMessage}) => {
             {selectedFile && (
                 <FileInfoContainer>
                     <FileName>{selectedFile.name}</FileName>
-                    <RemoveFileButton onClick={handleRemoveFile}/>
+                    <RemoveFileButton onClick={handleRemoveFile} />
                 </FileInfoContainer>
             )}
             <FormContainer as="form" onSubmit={handleSubmit}>
                 {isDataAnalyst && isQueryEnabled && (
                     <TextArea
-                        rows={2}
+                        rows={1}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Query"
                     />
                 )}
-
                 <TextArea
-                    rows={3}
+                    rows={1}
                     ref={inputRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -170,12 +169,19 @@ const MessageInput: React.FC<MessageInputProps> = ({onSendMessage}) => {
                 <Hint>Press Ctrl+Enter to send</Hint>
                 <ButtonContainer>
                     <PaperclipButton type="button" onClick={handlePaperclipClick}>
-                        <FaPaperclip/>
+                        <FaPaperclip />
                     </PaperclipButton>
                     <SendButton type="submit">
-                        <FaPaperPlane/>
+                        <FaPaperPlane />
                     </SendButton>
                 </ButtonContainer>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    accept=".txt, .csv, .json"
+                    onChange={handleFileChange}
+                />
             </FormContainer>
         </InputContainer>
     );
