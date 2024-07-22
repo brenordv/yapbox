@@ -69,7 +69,7 @@ async def ping():
     return {"message": "pong"}
 
 
-@app.post("/update-data-file", response_model=UploadDatafileResponse)
+@app.post("/upload-data-file", response_model=UploadDatafileResponse)
 async def update_data_file(file: UploadFile = File(...)):
     file_id = str(uuid4())
     file_content = await file.read()
