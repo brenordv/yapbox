@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FaPaperclip, FaPaperPlane, FaTimes } from 'react-icons/fa';
 import axios from 'axios';
-import { Message as MessageType, User, AiResponse, UploadDatafileResponse } from '../types/types';
+import {Message as MessageType, User, AiResponse, UploadDatafileResponse, ChatContextItem} from '../types/types';
 
 const InputContainer = styled.div`
     display: flex;
@@ -88,6 +88,7 @@ interface MessageInputProps {
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, currentUser }) => {
+    const [context, setContext] = useState<ChatContextItem[] | null>(null);
     const [message, setMessage] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [query, setQuery] = useState('');
@@ -118,9 +119,29 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, currentUser 
                 }
             }
 
-            const endpoint = isDataAnalyst ? '/analyze-data' : '/ask-question';
+            let endpoint: string;
+            let payload;
 
-            let payload = {};
+            if (isDataAnalyst) {
+                endpoint = '/analyze-data';
+                payload = {
+                    question_or_prompt: message,
+                    data: null,
+                    is_csv: isCsvFile(selectedFile),
+                    data_before_prompt: false,
+                    query: query,
+                    file_id: fileId,
+                    context,
+                }
+            } else {
+                endpoint = '/ask-question';
+                payload = {
+                    question_or_prompt: message,
+                    character_name: agentType,
+                    context,
+                    ruleset: process.env.REACT_APP_CHAT_RULESET,
+                }
+            }
 
             const newMessage: MessageType = {
                 id: String(Date.now()),
@@ -131,25 +152,12 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, currentUser 
 
             onSendMessage(newMessage);
 
-            if (!isDataAnalyst) {
-                payload = {
-                    question_or_prompt: message,
-                    file_id: fileId,
-                    query: isQueryEnabled ? query : undefined,
-                    character_name: process.env.REACT_APP_AGENT_TYPE
-                }
-            } else {
-                payload = {
-                    question_or_prompt: message,
-                    file_id: fileId,
-                    is_csv: isCsvFile(selectedFile),
-                    query: isQueryEnabled ? query : undefined,
-                }
-            }
-
             try {
                 const response = await axios.post<AiResponse>(`${apiUrl}${endpoint}`, payload);
                 const aiResponse = response.data.response;
+
+                setContext(response.data.updated_context);
+
                 setMessage(''); // Clear the message after sending the message
 
                 const aiMessage: MessageType = {
@@ -165,10 +173,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, currentUser 
                 alert('Failed to send message.');
             }
 
-
-
             if (process.env.REACT_APP_DA_CLEAR_QUERY_AFTER_SEND === 'true') {
-                setQuery(''); // Clear the query after sending the message
+                // Clear the query after sending the message
+                setQuery('');
             }
             inputRef.current?.focus(); // Return focus to the message input field
         }
