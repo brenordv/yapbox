@@ -90,7 +90,7 @@ const App: React.FC = () => {
             case 'data-analyst':
                 // Any specific initialization for data-analyst can be added here
                 break;
-            // Add more cases for different agentTypes in the future
+            // TODO: Add more cases for different agentTypes in the future
             default:
                 break;
         }
