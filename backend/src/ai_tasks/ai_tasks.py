@@ -155,16 +155,19 @@ class AiTasks:
             data: Union[str, List[str], dict, List[dict]],
             dataset_from_file: str,
             query: str) -> str:
-        prepared = [
-            "Main dataset:",
-            dataset_to_prompt_text(csv_string_to_dict_list(data)) if is_csv else data,
-        ]
+        if data is not None:
+            prepared = [
+                "Main dataset:",
+                dataset_to_prompt_text(csv_string_to_dict_list(data)) if is_csv else data,
+            ]
+        else:
+            prepared = []
 
         if dataset_from_file is not None:
             prepared.append("\nDataset from file:")
             prepared.append(dataset_to_prompt_text(csv_string_to_dict_list(dataset_from_file)))
 
-        if query is not None:
+        if query is not None and query.strip() != "":
             query_data = self._fetch_data_from_query(query)
             prepared.append("Dataset from query:")
             prepared.append(dataset_to_prompt_text(query_data) if query_data is not None else "Query yielded no results.")
