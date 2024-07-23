@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Message as MessageType, User } from '../types/types';
 import { FaRegClipboard, FaCheck } from 'react-icons/fa';
+import ReactMarkdown from 'react-markdown';
 
 const MessageContainer = styled.div`
     display: flex;
@@ -85,10 +86,10 @@ const ClipboardIcon = styled(FaRegClipboard)<{ isVisible: boolean }>`
 `;
 
 const CheckIcon = styled(FaCheck)<{ isVisible: boolean }>`
-  transition: opacity 0.3s ease;
-  opacity: ${(props) => (props.isVisible ? 1 : 0)};
-  color: green;
-  position: absolute;
+    transition: opacity 0.3s ease;
+    opacity: ${(props) => (props.isVisible ? 1 : 0)};
+    color: green;
+    position: absolute;
 `;
 
 interface MessageProps {
@@ -107,6 +108,10 @@ const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) =>
         setCopiedMessageId(messageId);
     };
 
+    const parsedMessage = process.env.REACT_APP_CONVERT_MARKDOWN_TO_HTML === 'true'
+        ? <ReactMarkdown>{message.text}</ReactMarkdown>
+        : message.text;
+
     return (
         <MessageContainer>
             <AvatarContainer isUserA={isUserA}>
@@ -118,7 +123,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUser, otherUser }) =>
                     <Timestamp>{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Timestamp>
                 </MessageHeader>
                 <MessageText>
-                    {message.text}
+                    {parsedMessage}
                     <IconContainer className="icon-container" onClick={() => handleCopyClick(message.id)}>
                         <ClipboardIcon isVisible={copiedMessageId !== message.id} />
                         <CheckIcon isVisible={copiedMessageId === message.id} />
