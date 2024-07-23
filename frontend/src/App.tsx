@@ -92,7 +92,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         checkAgentType();
-        const timer = setTimeout(() => setLoading(false), 5000); // Simulate 5-second loading
+        const timer = setTimeout(() => setLoading(false), 1000); // Simulate 5-second loading
         return () => clearTimeout(timer);
     }, []);
 
