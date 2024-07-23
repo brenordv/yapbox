@@ -2,6 +2,9 @@
 This is a simple web interface to interact with the YapBox API.
 You'll have the same functionalities as the backend CLI, but with a nice UI.
 
+> Important note: There's a lot of room for improvement here. I did this in a rush, and (maybe) I'll come back to it 
+> later to clean things up.
+
 To define which type of AI integration you want to use, run the appropriate start command (see below).
 
 Note: Before using anything, you'll need to run the backend API.
