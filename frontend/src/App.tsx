@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
+import axios from 'axios';
 import Header from './components/Header';
 import MessageList from './components/MessageList';
 import MessageInput from './components/MessageInput';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import { User, Message } from './types/types';
-import {currentAgentTypeToAvatar, currentAgentTypeToName} from "./utils/converters";
+import { currentAgentTypeToAvatar, currentAgentTypeToName } from "./utils/converters";
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -45,6 +46,12 @@ const AppContainer = styled.div`
     border: 1px solid ${({ theme }) => theme.borderColor};
 `;
 
+const ErrorMessage = styled.div`
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+`;
+
 const userA: User = {
     id: '1',
     name: 'User',
@@ -57,8 +64,7 @@ const userB: User = {
     avatar: currentAgentTypeToAvatar(false),
 };
 
-const initialMessages: Message[] = [
-];
+const initialMessages: Message[] = [];
 
 const App: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>(initialMessages);
@@ -67,14 +73,14 @@ const App: React.FC = () => {
         return userPreference ? 'dark' : 'light';
     });
     const [loading, setLoading] = useState(true);
+    const [serverError, setServerError] = useState<string | null>(null);
 
     const toggleTheme = () => {
         setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
     };
 
     const handleSendMessage = (newMessage: Message) => {
-        console.log("newMessage", newMessage);
-        setMessages(prevState => [...prevState, newMessage]);
+        setMessages((prevState) => [...prevState, newMessage]);
     };
 
     const checkAgentType = () => {
@@ -91,8 +97,24 @@ const App: React.FC = () => {
     };
 
     useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 1500); // Simulate 1.5 seconds of loading time, jsut because I like the loading screen.
+
+        const checkServerStatus = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/ping`);
+                if (response.status === 200) {
+                    //setLoading(false); //Let the timer do this.
+                } else {
+                    setServerError('The server is down. Please try again later.');
+                }
+            } catch (error) {
+                setServerError('The server is down. Please try again later.');
+            }
+        };
+
         checkAgentType();
-        const timer = setTimeout(() => setLoading(false), 1000); // Simulate 5-second loading
+        checkServerStatus();
+
         return () => clearTimeout(timer);
     }, []);
 
@@ -111,6 +133,8 @@ const App: React.FC = () => {
             <GlobalStyle />
             {loading ? (
                 <LoadingSkeleton />
+            ) : serverError ? (
+                <ErrorMessage>{serverError}</ErrorMessage>
             ) : (
                 <AppContainer>
                     <Header otherUser={userB} themeMode={themeMode} toggleTheme={toggleTheme} />
